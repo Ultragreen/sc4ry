@@ -1,5 +1,5 @@
 
-module Scary
+module Sc4ry
   class Logger
     
     @@loggers = {:stdout => ::Logger.new(STDOUT)}

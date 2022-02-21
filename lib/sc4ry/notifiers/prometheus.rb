@@ -30,28 +30,8 @@ module Sc4ry
       end
     end
 
-    @@notifiers_list = {:prometheus => {:class => Sc4ry::Notifiers::Prometheus, :config => {:url => 'http://localhost:9091'}}}
-
-    def Notifiers.list
-      return @@notifiers_list.keys
-    end
-
-    def Notifiers.get(options ={})
-      return @@notifiers_list[options[:name]]
-    end
-
-    def Notifiers.register(options)
-      raise ":name is mandatory" unless options[:name]
-      raise ":definition is mandatory" unless options[:definition]
-      @@notifiers_list[options[:name]] = options[:definition]
-    end
-
-    def Notifiers.config(options)
-      raise ":name is mandatory" unless options[:name]
-      raise ":config is mandatory" unless options[:config]
-      @@notifiers_list[options[:name]][:config] = options[:config]
-    end
-
     
-
+    
   end
+
+end
