@@ -2,6 +2,8 @@
 
 Sc4ry provide the Circuit Breaker Design Pattern for your applications
 
+![Sc4ry logo](assets/images/logo_sc4ry.png) _Simple CircuitBreacker 4 RubY_
+
 ## Installation
 
 Add this line to your application's Gemfile:
