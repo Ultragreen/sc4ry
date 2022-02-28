@@ -22,7 +22,51 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### sample with Restclient
+
+```ruby
+
+require 'rubygems'
+require 'sc4ry'
+
+
+# defining a circuit, config must be empty or override from default
+Sc4ry::Circuits.register({:circuit =>:test, :config => {:notifiers => [:prometheus, :mattermost], :exceptions => [Errno::ECONNREFUSED], :timeout =>  true, :timeout_value => 3, :check_delay => 5 }})
+
+# display the list of known circuit
+pp Sc4ry::Circuits.list
+
+# display default config, must be override with a nested hash by calling default_config= method
+pp  Sc4ry::Circuits.default_config
+
+# default values, circuit is half open before one of the max count is reached
+
+# {:max_failure_count=>5,                      => maximum failure before opening circuit
+#  :timeout_value=>20,                         => timeout value, if :timeout => true
+#  :timeout=>false,                            => activate internal timeout
+#  :max_timeout_count=>5,                      => maximum timeout try before opening circuit
+#  :max_time=>10,                              => maximum time for a circuit run
+#  :max_overtime_count=>3,                     => maximum count of overtime before opening circuit
+#  :check_delay=>30,                           => delay after opening, before trying again to closed circuit or after an other check
+#  :notifiers=>[],                             => active notifier, must be :symbol in [:prometheus, :mattermost]
+#  :exceptions=>[StandardError, RuntimeError]} => list of selected Exceptions considered for failure, others are SKIPPED. 
+
+# display configuration for a specific circuit
+pp Sc4ry::Circuits.get circuit: :test
+
+# sample Mattermost notification
+#Sc4ry::Notifiers::config({:name => :mattermost, :config =>  {:url => 'https://mattermost.mycorp.com', :token => "<TOKEN>"}})
+
+# sample loop
+100.times do
+  sleep 1
+  Sc4ry::Circuits.run circuit: :test do 
+   # for the test choose or build an endpoint you must shutdown  
+   puts RestClient.get('http://<URL_OF_A_ENDPOINT>')
+  end
+end
+
+```
 
 ## Development
 
