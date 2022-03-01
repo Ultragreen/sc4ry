@@ -18,7 +18,7 @@ module Sc4ry
     end
     
     def Logger.current=(sym)
-      raise "Logger not define : #{sim}" unless @@loggers.keys.include? sim
+      raise "Logger not define : #{sym}" unless @@loggers.keys.include? sym
       @@default = sym
     end
     
