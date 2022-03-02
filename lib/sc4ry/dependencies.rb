@@ -13,7 +13,9 @@ require 'uri'
 require 'json'
 
 
+
 require_relative 'helpers'
+require_relative 'exceptions'
 require_relative 'logger'
 require_relative 'backends/init'
 require_relative 'store'

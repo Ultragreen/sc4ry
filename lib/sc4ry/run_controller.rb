@@ -43,7 +43,12 @@ module Sc4ry
         elsif @circuit[:exceptions].include? e.class
           @failure = true
         else  
-          Sc4ry::Loggers.warning "skipped : #{@last_exception}"
+          if @circuit[:forward_unknown_exceptions] then
+            raise @last_exception.class, "Sc4ry forward: #{@last_exception.message}" 
+          else
+            Sc4ry::Loggers.warning "skipped : #{@last_exception}"
+          end
+          
         end 
       end
       @end_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
