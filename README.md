@@ -39,16 +39,24 @@ pp Sc4ry::Circuits.list
 # display default config, must be override with a nested hash by calling default_config= method
 pp  Sc4ry::Circuits.default_config
 
+
+# Config an alternate logger 
+Sc4ry::Logger.register name: :perso, instance: ::Logger.new('/tmp/logfile.log')
+Sc4ry::Logger::current = :perso
+
+
 # default values, circuit is half open before one of the max count is reached
 
 # {:max_failure_count=>5,                      => maximum failure before opening circuit
 #  :timeout_value=>20,                         => timeout value, if :timeout => true
-#  :timeout=>false,                            => activate internal timeout
+#  :timeout=>false,                            => (de)activate internal timeout
 #  :max_timeout_count=>5,                      => maximum timeout try before opening circuit
 #  :max_time=>10,                              => maximum time for a circuit run
 #  :max_overtime_count=>3,                     => maximum count of overtime before opening circuit
 #  :check_delay=>30,                           => delay after opening, before trying again to closed circuit or after an other check
 #  :notifiers=>[],                             => active notifier, must be :symbol in [:prometheus, :mattermost]
+#  :forward_unknown_exceptions => true,        => (de)activate forwarding of unknown exceptions, just log in DEBUG if false
+#  :raise_on_opening => false,                 => (de)activate raise specific Sc4ry exceptions ( CircuitBreaked ) if circuit opening
 #  :exceptions=>[StandardError, RuntimeError]} => list of selected Exceptions considered for failure, others are SKIPPED. 
 
 # display configuration for a specific circuit
