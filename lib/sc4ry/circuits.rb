@@ -89,7 +89,7 @@ module Sc4ry
         data[:status][:general] = status if worst_status.include? status
       end
       if save != data[:status][:general] then
-        raise Sc4ry::Exceptions:CircuitBreaked if data[:status][:general] == :open and data[:raise_on_opening]
+        raise Sc4ry::Exceptions::CircuitBreaked if data[:status][:general] == :open and data[:raise_on_opening]
         Sc4ry::Helpers.notify circuit: options[:circuit], config: data 
       end          
       @@circuits_store.put key: options[:circuit], value: data

@@ -44,9 +44,9 @@ module Sc4ry
           @failure = true
         else  
           if @circuit[:forward_unknown_exceptions] then
-            raise @last_exception.class, "Sc4ry forward: #{@last_exception.message}" 
+            raise e.class, "Sc4ry forward: #{e.message}" 
           else
-            Sc4ry::Loggers.warning "skipped : #{@last_exception}"
+            Sc4ry::Helpers.log level: :debug, message: "skipped : #{@last_exception}"
           end
           
         end 
