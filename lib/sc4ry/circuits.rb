@@ -22,6 +22,8 @@ module Sc4ry
 
     def Circuits.default_config=(config)
       @@config = config
+      @@config[:exceptions].map! {|item| item = Object.const_get item if item.class == String}
+
     end
 
     def Circuits.register(options = {})
