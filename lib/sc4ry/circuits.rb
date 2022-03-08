@@ -20,6 +20,10 @@ module Sc4ry
       return @@config
     end
 
+    def Circuits.default_config=(config)
+      @@config = config
+    end
+
     def Circuits.register(options = {})
       raise ":circuit is mandatory" unless options[:circuit]
       name = options[:circuit]
