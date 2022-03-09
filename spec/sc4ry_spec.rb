@@ -6,6 +6,7 @@ RSpec.describe Sc4ry do
     $log_file = '/tmp/logfile.log'
     File::unlink($log_file) if File::exist?($log_file)
     $default_config_store_redis = {:host => 'localhost', :port => 6379, :db => 10}
+    $default_config_store_redis[:host] = (ENV["REDIS_HOST"])? ENV["REDIS_HOST"] : "localhost"
     $default_config ={
       :max_failure_count=>5,
       :timeout_value=>20,
@@ -36,9 +37,11 @@ RSpec.describe Sc4ry do
       $update_by_merge[:max_time] = 12
       $update_by_block  = $update_by_merge.dup
       $update_by_block[:check_delay] = 30
-      Sc4ry::Circuits.store.change_backend name: :redis
-      Sc4ry::Circuits.store.flush
-      Sc4ry::Circuits.store.change_backend name: :memory
+      unless ENV["REDIS_HOST"] then
+        Sc4ry::Circuits.store.change_backend name: :redis
+        Sc4ry::Circuits.store.flush
+        Sc4ry::Circuits.store.change_backend name: :memory
+      end
     end
 
   after :all do 
