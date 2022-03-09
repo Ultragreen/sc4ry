@@ -14,7 +14,7 @@ module Sc4ry
       # send metrics to Prometheus PushGateway
       # @return [Bool]
       def Prometheus.notify(options = {})
-        @config = Sc4ry::Notifiers.get({name: :prometheus})[:config]
+        @config = Sc4ry::Notifiers.get(name: :prometheus)[:config]
         status = options[:config][:status][:general]
         circuit = options[:circuit]
         status_map = {:open => 0, :half_open => 1, :closed => 2}

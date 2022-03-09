@@ -15,14 +15,22 @@ module Sc4ry
         end
 
         class Sc4ryBackendError < StandardError
-            def initialize(msg)
+            def initialize(msg="")
                 super(msg)
               end
         
         end
 
+        class Sc4ryNotifierError < StandardError
+            def initialize(msg="")
+                super(msg)
+              end
+        
+        end
+        
+
         class ConfigError < StandardError
-            def initialize(msg)
+            def initialize(msg="")
                 super(msg)
               end
         

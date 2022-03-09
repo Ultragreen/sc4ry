@@ -9,24 +9,26 @@ module Sc4ry
     @@notifiers_list =  DEFAULT_NOTIFIERS.dup                           
   
 
+    def Notifiers.display_config(notifier: )
+      raise Sc4ry::Exceptions::Sc4ryNotifierError, "Notifier #{notifier} not found" unless @@notifiers_list.include? notifier
+      return @@notifiers_list[notifier][:config]
+    end
+
     def Notifiers.list
       return @@notifiers_list.keys
     end
 
-    def Notifiers.get(options ={})
-      return @@notifiers_list[options[:name]]
+    def Notifiers.get(name: )
+      return @@notifiers_list[name]
     end
 
-    def Notifiers.register(options)
-      raise ":name is mandatory" unless options[:name]
-      raise ":definition is mandatory" unless options[:definition]
-      @@notifiers_list[options[:name]] = options[:definition]
+    def Notifiers.register(name: , definition: )
+      @@notifiers_list[name] = definition
     end
 
-    def Notifiers.config(options)
-      raise ":name is mandatory" unless options[:name]
-      raise ":config is mandatory" unless options[:config]
-      @@notifiers_list[options[:name]][:config] = options[:config]
+    def Notifiers.config(name:, config: )
+      @@notifiers_list[name][:config] = config
+      return config
     end
  end
 end

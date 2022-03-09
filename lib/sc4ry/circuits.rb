@@ -6,8 +6,14 @@ module Sc4ry
 
     @@circuits_store = Sc4ry::Store.instance 
 
+    @@circuits_notifiers = Sc4ry::Notifiers
+
     @@config = DEFAULT_CONFIG
 
+
+    def Circuits.notifiers
+      return @@circuits_notifiers
+    end
 
     def Circuits.store
       return @@circuits_store

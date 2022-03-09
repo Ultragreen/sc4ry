@@ -6,7 +6,7 @@ module Sc4ry
             # send metrics to Prometheus PushGateway
             # @return [Bool]
             def Mattermost.notify(options = {})
-                config = Sc4ry::Notifiers.get({name: :mattermost})[:config]
+                config = Sc4ry::Notifiers.get(name: :mattermost)[:config]
                 status = options[:config][:status][:general]
                 circuit = options[:circuit]
                 status_map = {:open => 0, :half_open => 1, :closed => 2}
@@ -20,7 +20,7 @@ module Sc4ry
                             use_ssl: uri.scheme == "https",
                         }
                         payload = { "text" => "message : #{message } from #{Socket.gethostname}", "username" => "Sc4ry" }
-                        Sc4ry::Helpers.log level: :debug, message: "Mattermost Notifier : #{message}"
+                        Sc4ry::Helpers.log level: :debug, message: "Mattermost Notifying : #{message}"
                         request.body = ::JSON.dump(payload)
                         response = ::Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
                             http.request(request)

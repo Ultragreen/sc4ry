@@ -9,7 +9,10 @@ RSpec.describe Sc4ry do
     $default_config_store_redis = $base_config_store_redis.dup
     $default_config_store_redis[:host] = (ENV["REDIS_HOST"])? ENV["REDIS_HOST"] : "localhost"
     $default_config_store_redis[:port] = (ENV["REDIS_PORT"])? ENV["REDIS_PORT"] : 6379
-    
+    $pushgateway = Hash::new
+    $pushgateway[:port] = (ENV["PROM_PG_PORT"])? ENV["PROM_PG_PORT"] :  9091
+    $pushgateway[:host] = (ENV["PROM_PG_HOST"])? ENV["PROM_PG_HOST"] :  'localhost'
+
     $default_config ={
       :max_failure_count=>5,
       :timeout_value=>20,
@@ -344,6 +347,101 @@ RSpec.describe Sc4ry do
     end
 
 
+  end
+
+  context "Running circuit raise on opening" do 
+
+    it "trying to re-running without errors after 3 secondes re closed the circuit" do 
+      sleep 3
+      Sc4ry::Circuits.run circuit: :test do
+        Sc4ry::Helpers.log level: :info, message: "running circuit"
+      end
+      expect(Sc4ry::Circuits.status circuit: :test).to eq :closed
+      expect(open($log_file).grep(/INFO -- : Sc4ry : Circuit test : is now closed/).size).to eq 2
+
+    end
+
+    it "must be possible to reconfigure a circuit with  Circuits.update_config by merge partial " do 
+      $testing_config[:raise_on_opening] = true
+      Sc4ry::Circuits.update_config(circuit: :test, config: {raise_on_opening: true})
+    end
+
+    it "trying to run circuit with an uncovered Exception must forward this exception if config[:forward_unknown_exceptions] == true" do 
+      expect{ 
+        4.times do
+          Sc4ry::Circuits.run circuit: :test do
+            Sc4ry::Helpers.log level: :info, message: "running circuit with error uncovered"
+            raise StandardError
+        end
+      end
+      }.to raise_error(Sc4ry::Exceptions::CircuitBreaked)
+    end
+
+  end
+
+  context "Notifiers" do 
+
+    it "must possible to get the list of available notifiers with Sc4ry::Circuits.notifiers.list" do 
+      expect(Sc4ry::Circuits.notifiers.list.sort ).to eq [:mattermost, :prometheus]
+    end
+
+    it "must possible to config  notifiers with Sc4ry::Circuits.notifiers.config" do 
+      $prom_config = {url: "http://#{$pushgateway[:host]}:#{$pushgateway[:port]}"}
+      expect(Sc4ry::Circuits.notifiers.config name: :prometheus, config: $prom_config).to eq $prom_config
+    end
+
+    it "must possible to verify config  notifiers with Sc4ry::Circuits.notifiers.display_config" do 
+      expect(Sc4ry::Circuits.notifiers.display_config notifier: :prometheus ).to eq $prom_config
+    end
+
+    it "must be possible to reconfigure a circuit with  Circuits.update_config by merge partial " do 
+     test_config = {
+      :max_failure_count=>1,
+      :check_delay=>1,
+      :notifiers=>[:prometheus,:mattermost],
+      :forward_unknown_exceptions=>false,
+      :raise_on_opening=> false, 
+      :exceptions=>[StandardError, RuntimeError]}
+      Sc4ry::Circuits.update_config(circuit: :test, config: test_config)
+    end
+
+
+    it "must running circuit with error controlled by Sc4ry StandardError to half_open" do 
+      Sc4ry::Circuits.run circuit: :test do
+        Sc4ry::Helpers.log level: :info, message: "running circuit with error"
+        raise StandardError
+      end
+      expect(open($log_file).grep(/DEBUG -- : Sc4ry : Prometheus Notifier : notifying for circuit test, state : half_open./).size).to eq 1
+    end
+
+    it "must running again circuit with error controlled by Sc4ry StandardError to open" do 
+      Sc4ry::Circuits.run circuit: :test do
+        Sc4ry::Helpers.log level: :info, message: "running circuit with error"
+        raise StandardError
+      end
+      expect(open($log_file).grep(/DEBUG -- : Sc4ry : Prometheus Notifier : notifying for circuit test, state : open./).size).to eq 1
+    end
+
+    it "trying to re-running without errors after 3 secondes re closed the circuit" do 
+      sleep 3
+      Sc4ry::Circuits.run circuit: :test do
+        Sc4ry::Helpers.log level: :info, message: "running circuit"
+      end
+      expect(Sc4ry::Circuits.status circuit: :test).to eq :closed
+      expect(open($log_file).grep(/INFO -- : Sc4ry : Circuit test : is now closed/).size).to eq 3
+      expect(open($log_file).grep(/DEBUG -- : Sc4ry : Prometheus Notifier : notifying for circuit test, state : closed./).size).to eq 1
+
+    end
+
+    it "must trace 3 times failed attempt to notify unconfigured mattermost notifier" do
+      expect(open($log_file).grep(/WARN -- : Sc4ry : Mattermost Notifier : URL malformed/).size).to eq 3
+    end
+  end
+
+  context "Ending : flushing" do
+    it "mustbe possible to flush redis backend with Sc4ry::Circuits.store.flush" do
+      Sc4ry::Circuits.store.flush
+    end
   end
 
 end

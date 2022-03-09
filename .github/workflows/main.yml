@@ -9,6 +9,8 @@ jobs:
     services:
       redis:
         image: redis
+      pushgateway:
+        image: prom/pushgateway
 
     steps:
     - uses: actions/checkout@v2
@@ -21,3 +23,5 @@ jobs:
           # The hostname used to communicate with the Redis service container
           REDIS_HOST: redis
           REDIS_PORT: 6379
+          PROM_PG_PORT: 9091
+          PROM_PG_HOST: pushgateway
