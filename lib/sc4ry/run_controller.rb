@@ -37,7 +37,7 @@ module Sc4ry
           options[:block].call
         end
       rescue Exception => e
-        @last_exception = e.class
+        @last_exception = e.class.to_s
         if e.class  == Timeout::Error then 
           @timeout = true
         elsif @circuit[:exceptions].include? e.class
