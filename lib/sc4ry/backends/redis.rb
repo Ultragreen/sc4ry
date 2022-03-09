@@ -16,46 +16,46 @@ module Sc4ry
         # return the list of find records in backend for a specific pattern
         # @return [Array] list of record (for all hostname if hostname is specified)
         def list
-           return @store.keys('*')
+           return @be.keys('*').map(&:to_sym)
         end
   
   
         # return value of queried record
-        # @param [Hash] options
-        # @option options [Symbol] :key the name of the record
+        # @param [Hash] params
+        # @option params [Symbol] :key the name of the record
         # @return [String] content value of record
-        def get(options)
-          return @store.get(options[:key])
+        def get(key:)
+          return YAML.load(@be.get(key))
         end
   
         # defined and store value for specified key
-        # @param [Hash] options
-        # @option options [Symbol] :key the name of the record
-        # @option options [Symbol] :value the content value of the record
+        # @param [Hash] params
+        # @option params [Symbol] :key the name of the record
+        # @option params [Symbol] :value the content value of the record
         # @return [String] content value of record
-        def put(options)
-          @store.set options[:key], options[:value]
+        def put(key: ,value:)
+          @be.set key, value.to_yaml
         end
   
         # delete a specific record
-        # @param [Hash] options
-        # @option options [Symbol] :key the name of the record
+        # @param [Hash] params
+        # @option params [Symbol] :key the name of the record
         # @return [Boolean] status of the operation
-        def del(options)
-          @store.del options[:key]
+        def del(key: )
+          @be.del key
         end
   
         # flush all records in backend
         def flush
-          @store.flushdb
+          @be.flushdb
         end
   
         # verifiy a specific record existance
-        # @param [Hash] options
-        # @option options [Symbol] :key the name of the record
+        # @param [Hash] params
+        # @option params [Symbol] :key the name of the record
         # @return [Boolean] presence of the record
-        def exist?(options)
-          return ( not @store.get(options[:key]).nil?)
+        def exist?(key: )
+          return ( not @be.get(key).nil?)
         end
       
   

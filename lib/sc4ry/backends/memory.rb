@@ -10,24 +10,24 @@ module Sc4ry
         return @data.keys
       end
 
-      def get(options)
-        return @data[options[:key]]
+      def get(key: )
+        return @data[key]
       end
 
-      def put(options)
-        @data[options[:key]] = options[:value]
+      def put(key:, value: )
+        @data[key] = value
       end 
 
-      def del(options)
-        @data.delete options[:key]
+      def del(key: )
+        @data.delete key
       end 
 
       def flush
         @data.clear
       end
 
-      def exist?(options)
-        return @data.include? options[:key]
+      def exist?(key: )
+        return @data.include? key
       end
 
     end

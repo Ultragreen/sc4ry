@@ -6,7 +6,7 @@ module Sc4ry
     extend Forwardable
     include Singleton
 
-    @@backends = {:memory => {:class => Sc4ry::Backends::Memory},
+    @@backends = {:memory => {:class => Sc4ry::Backends::Memory, config: {}},
                   :redis  => {:class => Sc4ry::Backends::Redis, :config => {:host => 'localhost', :port => 6379, :db => 10 }}}
 
     attr_reader :be
@@ -20,21 +20,28 @@ module Sc4ry
       return @@current
     end
 
-    def change_backend(options)
-      @@current = options[:name]
+    def display_config(backend: )
+      raise Sc4ry::Exceptions::Sc4ryBackendError, "backend #{backend} not found" unless @@backends.include? backend
+      return @@backends[backend][:config]
+    end
+
+    def list_backend
+      return @@backends.keys
+    end
+
+    def change_backend(name: )
+      raise Sc4ry::Exceptions::Sc4ryBackendError, "backend #{name} not found" unless @@backends.include? name
+      @@current =  name
       @be = @@backends[@@current][:class]::new(@@backends[@@current][:config])
+      return name
     end
 
-    def register_backend(options)
-      raise ":name is mandatory" unless options[:name]
-      raise ":definition is mandatory" unless options[:definition]
-      @@backends[options[:name]] = options[:definition]
+    def register_backend(name:, config: {}, backend_class:)
+      @@backends[name] = {config: config, class: backend_class}
     end
-
-    def config_backend(options)
-      raise ":name is mandatory" unless options[:name]
-      raise ":config is mandatory" unless options[:config]
-      @@backends[options[:name]][:config] = options[:config]
+ 
+    def config_backend(name:, config:)
+      @@backends[name][:config] = config
     end
 
 

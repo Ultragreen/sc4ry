@@ -8,6 +8,11 @@ module Sc4ry
 
     @@config = DEFAULT_CONFIG
 
+
+    def Circuits.store
+      return @@circuits_store
+    end
+
     def Circuits.default_config
       return @@config
     end
@@ -46,7 +51,9 @@ module Sc4ry
       end
       validator.validate!
       Sc4ry::Helpers.log level: :debug, message: "Circuit #{circuit} : registered"
+      raise Sc4ryGenericError, "Circuit: #{circuit} already exist in store" if @@circuits_store.exist? key: circuit 
       @@circuits_store.put key: circuit, value: validator.result 
+      return validator.result
     end
 
     def Circuits.list
@@ -54,8 +61,39 @@ module Sc4ry
     end
 
 
-    def Circuits.get(options)
-      @@circuits_store.get key: options[:circuit]
+    def Circuits.flush
+      @@circuits_store.flush
+      return true
+    end
+
+    def Circuits.unregister(circuit:)
+      if Circuits.list.include? circuit then
+        @@circuits_store.del key: circuit
+        return true
+      else
+        raise Sc4ryGenericError, "Circuit #{circuit} not found"
+        return false
+      end
+    end
+
+
+    def Circuits.get(circuit:)
+      @@circuits_store.get key: circuit
+    end
+
+
+    def Circuits.update_config(circuit: , config: {})
+      raise Sc4ryGenericError, "Circuit #{circuit} not found" unless Circuits.list.include? circuit
+      save = @@circuits_store.get key: circuit
+      save.delete_if {|key,val| [:status,:values].include? key}
+      Circuits.unregister(circuit: circuit)
+      save.merge! config
+      return Circuits.register circuit: circuit, config: save 
+    end
+
+    def Circuits.status(circuit:)
+      data = @@circuits_store.get key: circuit
+      return (data.include? :status)? data[:status][:general] : :never_run
     end
 
     def Circuits.run(options = {}, &block)
@@ -76,7 +114,8 @@ module Sc4ry
         controller = Sc4ry::RunController.new(circuit)
         Circuits.control circuit: circuit_name, values: controller.run(block: block)
       end
-      Sc4ry::Helpers.log level: :debug, message: "Circuit #{circuit_name} : status #{circuit[:status]}"
+      result = @@circuits_store.get key: circuit_name
+      Sc4ry::Helpers.log level: :debug, message: "Circuit #{circuit_name} : status #{result[:status]}"
 
     end
 

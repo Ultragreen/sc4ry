@@ -1,6 +1,7 @@
 require 'rest-client'
 require 'prometheus/client'
 require 'prometheus/client/push'
+require 'redis'
 
 require 'logger' 
 require 'timeout'
@@ -11,6 +12,7 @@ require 'openssl'
 require 'net/http'
 require 'uri'
 require 'json'
+require 'yaml'
 
 
 

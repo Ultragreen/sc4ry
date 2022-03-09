@@ -8,6 +8,13 @@ module Sc4ry
         end
 
         class Sc4ryGenericError < StandardError
+            def initialize(msg="")
+                super(msg)
+              end
+        
+        end
+
+        class Sc4ryBackendError < StandardError
             def initialize(msg)
                 super(msg)
               end

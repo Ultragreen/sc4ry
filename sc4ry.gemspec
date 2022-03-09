@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   
   spec.add_dependency "prometheus-client", "~> 3.0"
   spec.add_dependency "rest-client", "~> 2.1"
+  spec.add_dependency "redis", "~> 4.6"
 
 
 end
