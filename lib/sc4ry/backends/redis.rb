@@ -25,7 +25,9 @@ module Sc4ry
         # @option params [Symbol] :key the name of the record
         # @return [String] content value of record
         def get(key:)
-          return YAML.load(@be.get(key))
+          res = YAML.load(@be.get(key))
+          res[:exceptions].map! {|item|  item = Object.const_get(item) if item.class == String }
+          return res
         end
   
         # defined and store value for specified key
@@ -34,7 +36,9 @@ module Sc4ry
         # @option params [Symbol] :value the content value of the record
         # @return [String] content value of record
         def put(key: ,value:)
-          @be.set key, value.to_yaml
+          data = value.dup
+          data[:exceptions].map! {|item| item = item.name.to_s if item.class == Class }
+          @be.set key, data.to_yaml
         end
   
         # delete a specific record

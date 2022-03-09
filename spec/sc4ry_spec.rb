@@ -35,7 +35,6 @@ RSpec.describe Sc4ry do
         :forward_unknown_exceptions=>true,
         :raise_on_opening=>false,
         :exceptions=>[StandardError, RuntimeError]}
-
       $update_by_merge =  $default_config.dup
       $update_by_merge[:max_time] = 12
       $update_by_block  = $update_by_merge.dup
@@ -226,7 +225,7 @@ RSpec.describe Sc4ry do
     end
 
     it "must be possible to register a circuit with override config with Sc4ry::Circuits.register by merge" do 
-      expect(Sc4ry::Circuits.register circuit: :test, config: $testing_config).to eq $testing_config
+      expect(Sc4ry::Circuits.register circuit: :test, config: $testing_config.dup.freeze).to eq $testing_config
     end
     
   end
@@ -317,6 +316,7 @@ RSpec.describe Sc4ry do
   context "Running circuit & timeout" do 
     it "must be possible to reconfigure a circuit with  Circuits.update_config by merge" do 
       $testing_config[:timeout] = true
+      
       expect(Sc4ry::Circuits.update_config circuit: :test, config: $testing_config).to eq $testing_config
     end
        
@@ -327,6 +327,7 @@ RSpec.describe Sc4ry do
     end
 
     it "must validate config for test circuit with Sc4ry::Circuits.get" do 
+      $testing_config[:exceptions].map!{|item| item = Object.const_get(item) if item.class == String }
       expect(Sc4ry::Circuits.get circuit: :test).to eq $testing_config
     end 
 
