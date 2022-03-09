@@ -1,37 +1,52 @@
 module Sc4ry
   class Circuits
 
+    include Sc4ry::Constants
+    include Sc4ry::Exceptions
+
     @@circuits_store = Sc4ry::Store.instance 
 
-    @@config = { :max_failure_count => 5,
-                 :timeout_value => 20,
-                 :timeout => false,
-                 :max_timeout_count => 5,
-                 :max_time => 10,
-                 :max_overtime_count => 3,
-                 :check_delay => 30,
-                 :notifiers => [],
-                 :forward_unknown_exceptions => true,
-                 :raise_on_opening => false,
-                 :exceptions => [StandardError, RuntimeError]
-                 }
+    @@config = DEFAULT_CONFIG
 
     def Circuits.default_config
       return @@config
     end
 
-    def Circuits.default_config=(config)
-      @@config = config
-      @@config[:exceptions].map! {|item| item = Object.const_get item if item.class == String}
+    def Circuits.merge_default_config(diff:)
+      validator = Sc4ry::Config::Validator::new(definition: diff, from: @@config)
+      validator.validate!
+      @@config = validator.result 
 
     end
 
-    def Circuits.register(options = {})
-      raise ":circuit is mandatory" unless options[:circuit]
-      name = options[:circuit]
-      override = (options[:config].class == Hash)? options[:config] : {}
-      config = @@config.merge override
-      @@circuits_store.put key: name, value: config 
+    def Circuits.configure(&bloc)
+      mapper = Sc4ry::Config::ConfigMapper::new(definition: @@config.dup)
+      yield(mapper)
+      validator = Sc4ry::Config::Validator::new(definition: mapper.config, from: @@config)
+      validator.validate!
+      @@config = validator.result 
+    end
+
+
+    def Circuits.default_config=(config)
+      Sc4ry::Helpers.log level: :warn, message: "DEPRECATED: Circuits.default_config= is deprecated please use Circuits.merge_default_config add: {<config_hash>}"
+      Circuits.merge_default_config(diff: config)
+    end
+
+    def Circuits.register(circuit:, config: {})
+      if config.size > 0 and block_given? then 
+        raise Sc4ryGenericError, "config: keyword must not be defined when block is given"
+      end
+      if block_given? then 
+        mapper = Sc4ry::Config::ConfigMapper::new(definition: @@config.dup)
+        yield(mapper)
+        validator = Sc4ry::Config::Validator::new(definition: mapper.config, from: @@config.dup)
+      else 
+        validator = Sc4ry::Config::Validator::new(definition: config, from: @@config.dup )
+      end
+      validator.validate!
+      Sc4ry::Helpers.log level: :debug, message: "Circuit #{circuit} : registered"
+      @@circuits_store.put key: circuit, value: validator.result 
     end
 
     def Circuits.list
@@ -45,10 +60,10 @@ module Sc4ry
 
     def Circuits.run(options = {}, &block)
       circuits_list = Circuits.list
-      raise "No circuit block given" unless block_given?
-      raise "No circuits defined" if circuits_list.empty? 
+      raise Sc4ryGenericError, "No circuit block given" unless block_given?
+      raise Sc4ryGenericError, "No circuits defined" if circuits_list.empty? 
       circuit_name = (options[:circuit])? options[:circuit] : circuits_list.first
-      raise "Circuit #{circuit_name} not found" unless circuits_list.include? circuit_name
+      raise Sc4ryGenericError, "Circuit #{circuit_name} not found" unless circuits_list.include? circuit_name
       circuit = Circuits.get circuit: circuit_name
       skip = false
       if circuit.include? :status then
@@ -61,7 +76,7 @@ module Sc4ry
         controller = Sc4ry::RunController.new(circuit)
         Circuits.control circuit: circuit_name, values: controller.run(block: block)
       end
-      Sc4ry::Helpers.log level: :info, message: "Circuit #{circuit_name} : status #{circuit[:status]}"
+      Sc4ry::Helpers.log level: :debug, message: "Circuit #{circuit_name} : status #{circuit[:status]}"
 
     end
 
@@ -95,7 +110,9 @@ module Sc4ry
         data[:status][:general] = status if worst_status.include? status
       end
       if save != data[:status][:general] then
-        raise Sc4ry::Exceptions::CircuitBreaked if data[:status][:general] == :open and data[:raise_on_opening]
+        raise CircuitBreaked if data[:status][:general] == :open and data[:raise_on_opening]
+        Sc4ry::Helpers.log level: :error, message: "Circuit #{options[:circuit]} : breacking ! " if data[:status][:general] == :open
+        Sc4ry::Helpers.log level: :info, message: "Circuit #{options[:circuit]} : is now closed" if data[:status][:general] == :closed
         Sc4ry::Helpers.notify circuit: options[:circuit], config: data 
       end          
       @@circuits_store.put key: options[:circuit], value: data

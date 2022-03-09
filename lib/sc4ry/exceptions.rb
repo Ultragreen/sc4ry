@@ -7,5 +7,19 @@ module Sc4ry
         
         end
 
+        class Sc4ryGenericError < StandardError
+            def initialize(msg)
+                super(msg)
+              end
+        
+        end
+
+        class ConfigError < StandardError
+            def initialize(msg)
+                super(msg)
+              end
+        
+        end
+
     end
 end

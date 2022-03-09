@@ -2,9 +2,12 @@ Dir[File.dirname(__FILE__) + '/*.rb'].sort.each { |file| require file unless Fil
 
 module Sc4ry 
   module Notifiers
-    @@notifiers_list = {:prometheus => {:class => Sc4ry::Notifiers::Prometheus, :config => {:url => 'http://localhost:9091'}},
-                        :mattermost => {:class => Sc4ry::Notifiers::Mattermost, :config => {:url => 'http://localhost:9999', :token => "<CHANGE_ME>"}}                            
-                       }
+
+    DEFAULT_NOTIFIERS = {:prometheus => {:class => Sc4ry::Notifiers::Prometheus, :config => {:url => 'http://localhost:9091'}},
+                          :mattermost => {:class => Sc4ry::Notifiers::Mattermost, :config => {:url => 'http://localhost:9999', :token => "<CHANGE_ME>"}}
+                        }
+    @@notifiers_list =  DEFAULT_NOTIFIERS.dup                           
+  
 
     def Notifiers.list
       return @@notifiers_list.keys

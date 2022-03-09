@@ -30,39 +30,64 @@ require 'rubygems'
 require 'sc4ry'
 
 
+puts 'Initial default config'
+pp Sc4ry::Circuits.default_config
+
+
+Sc4ry::Circuits.merge_default_config diff: {timeout: true }
+# or with a block
+Sc4ry::Circuits.configure do |spec|
+  spec.max_time = 12
+end
+
+
+# display default config
+puts 'Default config'
+pp Sc4ry::Circuits.default_config
+
+
 # defining a circuit, config must be empty or override from default
-Sc4ry::Circuits.register({:circuit =>:test, :config => {:notifiers => [:prometheus, :mattermost], :exceptions => [Errno::ECONNREFUSED], :timeout =>  true, :timeout_value => 3, :check_delay => 5 }})
+Sc4ry::Circuits.register circuit: :test, config: {:notifiers => [:prometheus,:mattermost], :exceptions => [Errno::ECONNREFUSED, URI::InvalidURIError] }
+# or with a block
+Sc4ry::Circuits.register circuit: :test2 do |spec|
+  spec.exceptions = [Errno::ECONNREFUSED]
+end
+# or 
+Sc4ry::Circuits.register circuit: :test3
 
-# display the list of known circuit
-pp Sc4ry::Circuits.list
-
-# display default config, must be override with a nested hash by calling default_config= method
-pp  Sc4ry::Circuits.default_config
 
 
-# Config an alternate logger 
+puts "Circuits list"
+pp Sc4ry::Circuits::list
+
+# Config an alternate logger
 Sc4ry::Logger.register name: :perso, instance: ::Logger.new('/tmp/logfile.log')
-Sc4ry::Logger::current = :perso
+Sc4ry::Logger::current = :stdout
 
 
 # default values, circuit is half open before one of the max count is reached
 
-# {:max_failure_count=>5,                      => maximum failure before opening circuit
-#  :timeout_value=>20,                         => timeout value, if :timeout => true
-#  :timeout=>false,                            => (de)activate internal timeout
-#  :max_timeout_count=>5,                      => maximum timeout try before opening circuit
-#  :max_time=>10,                              => maximum time for a circuit run
-#  :max_overtime_count=>3,                     => maximum count of overtime before opening circuit
-#  :check_delay=>30,                           => delay after opening, before trying again to closed circuit or after an other check
-#  :notifiers=>[],                             => active notifier, must be :symbol in [:prometheus, :mattermost]
-#  :forward_unknown_exceptions => true,        => (de)activate forwarding of unknown exceptions, just log in DEBUG if false
-#  :raise_on_opening => false,                 => (de)activate raise specific Sc4ry exceptions ( CircuitBreaked ) if circuit opening
-#  :exceptions=>[StandardError, RuntimeError]} => list of selected Exceptions considered for failure, others are SKIPPED. 
+# DEFAULT_CONFIG = { 
+#             :max_failure_count => 5,
+#             :timeout_value => 20,
+#             :timeout => false,
+#             :max_timeout_count => 5,
+#             :max_time => 10,
+#             :max_overtime_count => 3,
+#             :check_delay => 30,
+#             :notifiers => [],
+#             :forward_unknown_exceptions => true,
+#             :raise_on_opening => false,
+#             :exceptions => [StandardError, RuntimeError]
+#             }
 
 # display configuration for a specific circuit
-pp Sc4ry::Circuits.get circuit: :test
+Sc4ry::Circuits::list.each do |circuit|
+  puts "Config #{circuit} :"
+  pp Sc4ry::Circuits.get circuit: circuit
+end
 
-# sample Mattermost notification
+ # sample Mattermost notification
 #Sc4ry::Notifiers::config({:name => :mattermost, :config =>  {:url => 'https://mattermost.mycorp.com', :token => "<TOKEN>"}})
 
 # sample loop
@@ -70,7 +95,7 @@ pp Sc4ry::Circuits.get circuit: :test
   sleep 1
   Sc4ry::Circuits.run circuit: :test do 
    # for the test choose or build an endpoint you must shutdown  
-   puts RestClient.get('http://<URL_OF_A_ENDPOINT>')
+   puts RestClient.get('http://<URL_OF_AN_ENDPOINT>')
   end
 end
 
