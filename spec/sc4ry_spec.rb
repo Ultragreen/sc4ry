@@ -8,7 +8,7 @@ RSpec.describe Sc4ry do
     $base_config_store_redis = {:host => 'localhost', :port => 6379, :db => 10}
     $default_config_store_redis = $base_config_store_redis.dup
     $default_config_store_redis[:host] = (ENV["REDIS_HOST"])? ENV["REDIS_HOST"] : "localhost"
-    $default_config_store_redis[:port] = (ENV["REDIS_PORT"])? ENV["REDIS_PORT"] : "localhost"
+    $default_config_store_redis[:port] = (ENV["REDIS_PORT"])? ENV["REDIS_PORT"] : 6379
     
     $default_config ={
       :max_failure_count=>5,
