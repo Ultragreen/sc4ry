@@ -3,15 +3,12 @@ name: Ruby
 on: [push,pull_request]
 
 jobs:
-  build:
+  container-job:
     runs-on: ubuntu-latest
+    container: ruby:latest
     services:
-      # Label used to access the service container
       redis:
-        # Docker Hub image
         image: redis
-        ports:
-          - 6379:6379/tcp
 
     steps:
     - uses: actions/checkout@v2
