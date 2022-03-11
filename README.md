@@ -17,7 +17,6 @@ Sc4ry provide the Circuit Breaker Design Pattern for your applications
 ![GitHub Org's stars](https://img.shields.io/github/stars/Ultragreen?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/Ultragreen/sc4ry?style=social)
 
-<script src="https://liberapay.com/ruydiaz/widgets/button.js"></script>
 <noscript><a href="https://liberapay.com/ruydiaz/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
 
 ![Sc4ry logo](assets/images/logo_sc4ry.png) 
