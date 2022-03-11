@@ -8,12 +8,14 @@ Sc4ry provide the Circuit Breaker Design Pattern for your applications
 [![Documentation](https://img.shields.io/badge/docs-rubydoc.info-brightgreen)](https://rubydoc.info/gems/sc4ry)
 ![GitHub issues](https://img.shields.io/github/issues/Ultragreen/sc4ry)
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Ultragreen/sc4ry)
-![GitHub watchers](https://img.shields.io/github/watchers/Ultragreen/sc4ry?style=social)
 ![GitHub top language](https://img.shields.io/github/languages/top/Ultragreen/sc4ry)
 ![GitHub milestones](https://img.shields.io/github/milestones/open/Ultragreen/sc4ry)
 
 ![Gem](https://img.shields.io/gem/dt/sc4ry)
 [![Gem Version](https://badge.fury.io/rb/sc4ry.svg)](https://badge.fury.io/rb/sc4ry)
+![Twitter Follow](https://img.shields.io/twitter/follow/Ultragreen?style=social)
+![GitHub Org's stars](https://img.shields.io/github/stars/Ultragreen?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/Ultragreen/sc4ry?style=social)
 
 ![Sc4ry logo](assets/images/logo_sc4ry.png) 
 _Simple CircuitBreacker 4 RubY_
