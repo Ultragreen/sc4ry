@@ -7,7 +7,8 @@ Sc4ry provide the Circuit Breaker Design Pattern for your applications
 [![Documentation](https://img.shields.io/badge/docs-rubydoc.info-brightgreen)](https://rubydoc.info/gems/sc4ry)
 
 
-![Sc4ry logo](assets/images/logo_sc4ry.png) _Simple CircuitBreacker 4 RubY_
+![Sc4ry logo](assets/images/logo_sc4ry.png) 
+_Simple CircuitBreacker 4 RubY_
 
 ## Installation
 
@@ -27,6 +28,9 @@ Or install it yourself as:
 
 ## Usage
 
+### Circuits States Worflow
+
+![Sc4ry workflow](assets/images/sc4ry_workflow.png) 
 ### sample with Restclient
 
 ```ruby
