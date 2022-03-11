@@ -15,7 +15,8 @@ end
 
 RSpec::Core::RakeTask.new(:spec)
 
-task :default => [:roodi,:spec,:stats]
+task :default => :spec
+
 
 YARD::Rake::YardocTask.new do |t|
     t.files   = [ 'lib/**/*.rb', '-', 'doc/**/*','spec/**/*_spec.rb']
@@ -27,6 +28,7 @@ namespace :yardoc do
 task :clobber do
     rm_r "yardoc" rescue nil
     rm_r ".yardoc" rescue nil
+    rm_r "pkg" rescue nil
 end
 end
 task :clobber => "yardoc:clobber"
