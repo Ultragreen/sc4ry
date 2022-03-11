@@ -43,10 +43,10 @@ module Sc4ry
     
     # class method how configure a specific notifier 
     # @param name [Symbol] a notifier name
-    # @param config [Hash] a notifier config merge 
+    # @param config [Hash] a notifier config  
     # @return [Hash] the notifier structure                     
     def Notifiers.config(name:, config: )
-      @@notifiers_list[name][:config].merge config
+      @@notifiers_list[name][:config] = config
       return config
     end
  end
