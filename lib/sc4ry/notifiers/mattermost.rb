@@ -1,6 +1,9 @@
+# Sc4ry namespace module 
 module Sc4ry
+    # Notifiers namespace module
     module Notifiers
         
+        # Mattermost Notifier class
         class Mattermost
             
             # send metrics to Prometheus PushGateway

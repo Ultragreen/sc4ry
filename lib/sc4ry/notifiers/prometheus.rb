@@ -1,7 +1,11 @@
+# Sc4ry namespace module
+
 module Sc4ry
+  # Notifiers namespace module
   module Notifiers
 
   
+    # Prometheus notifier class
     class Prometheus
 
       @@registry = ::Prometheus::Client::Registry::new

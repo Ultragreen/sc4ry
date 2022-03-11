@@ -21,8 +21,7 @@ module Sc4ry
   
   
         # return value of queried record
-        # @param [Hash] params
-        # @option params [Symbol] :key the name of the record
+        # @param key [Symbol] the name of the record
         # @return [String] content value of record
         def get(key:)
           res = YAML.load(@be.get(key))
@@ -31,9 +30,8 @@ module Sc4ry
         end
   
         # defined and store value for specified key
-        # @param [Hash] params
-        # @option params [Symbol] :key the name of the record
-        # @option params [Symbol] :value the content value of the record
+        # @param key [Symbol] :key the name of the record
+        # @param value [Symbol] :value the content value of the record
         # @return [String] content value of record
         def put(key: ,value:)
           data = value.dup
@@ -42,21 +40,20 @@ module Sc4ry
         end
   
         # delete a specific record
-        # @param [Hash] params
-        # @option params [Symbol] :key the name of the record
+        # @param key [Symbol] the name of the record
         # @return [Boolean] status of the operation
         def del(key: )
           @be.del key
         end
   
         # flush all records in backend
+        # @return [Boolean] status of the operation
         def flush
           @be.flushdb
         end
   
-        # verifiy a specific record existance
-        # @param [Hash] params
-        # @option params [Symbol] :key the name of the record
+        # verifiy a specific record existence
+        # @param key [Symbol] the name of the record
         # @return [Boolean] presence of the record
         def exist?(key: )
           return ( not @be.get(key).nil?)

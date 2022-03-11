@@ -24,5 +24,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rest-client", "~> 2.1"
   spec.add_dependency "redis", "~> 4.6"
 
+  spec.add_development_dependency "yard", "~> 0.9.27"
+  spec.add_development_dependency 'code_statistics', '~> 0.2.13'
+  spec.add_development_dependency "yard-rspec", "~> 0.1"
+  spec.add_development_dependency "roodi", "~> 5.0"
 
 end

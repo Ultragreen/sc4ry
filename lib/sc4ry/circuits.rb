@@ -1,24 +1,31 @@
+# Sc4ry Namespace Module
 module Sc4ry
+  # Circuits management class
+
   class Circuits
 
     include Sc4ry::Constants
     include Sc4ry::Exceptions
 
     @@circuits_store = Sc4ry::Store.instance 
-
     @@circuits_notifiers = Sc4ry::Notifiers
-
     @@config = DEFAULT_CONFIG
 
 
+    # Class method how forward a Notifiers manager class
+    # @return [Sc4ry::Notifiers]
     def Circuits.notifiers
       return @@circuits_notifiers
     end
 
+    # Class method how forward a Store manager class singleton
+    # @return [Sc4ry::Store]
     def Circuits.store
       return @@circuits_store
     end
 
+    # Class method how return de default Sc4ry config
+    # @return [Hash] 
     def Circuits.default_config
       return @@config
     end
