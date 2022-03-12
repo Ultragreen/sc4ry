@@ -1,7 +1,9 @@
-# Sc4ry namespace module
-
+# Sc4ry module
+# @note namespace
 module Sc4ry
-  # Notifiers namespace module
+
+  # Sc4ry::Notifiers module
+  # @note namespace
   module Notifiers
 
   

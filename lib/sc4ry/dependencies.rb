@@ -1,8 +1,11 @@
+# rubygems depends
 require 'rest-client'
 require 'prometheus/client'
 require 'prometheus/client/push'
 require 'redis'
+require 'version'
 
+# Stdlibs depends
 require 'logger' 
 require 'timeout'
 require 'forwardable'
@@ -15,7 +18,7 @@ require 'json'
 require 'yaml'
 
 
-
+# Sc4ry internal depends
 require_relative 'helpers'
 require_relative 'exceptions'
 require_relative 'logger'

@@ -1,8 +1,11 @@
 Dir[File.dirname(__FILE__) + '/*.rb'].sort.each { |file| require file unless File.basename(file) == 'init.rb' }
 
+# Sc4ry module
+# @note namespace
 module Sc4ry 
 
-  # Sc4ry Notifiers 
+  # Sc4ry::Notifiers module 
+  # @note namespace 
     module Notifiers
 
     # default notifiers specifications

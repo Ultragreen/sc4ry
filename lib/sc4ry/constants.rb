@@ -1,7 +1,14 @@
+# Sc4ry module
+# @note namespace
 module Sc4ry
+    # Sc4ry::Constants module
+    # @note namespace
     module Constants
 
+        # notifiers available in Sc4ry natively
         CURRENT_NOTIFIERS = [:prometheus, :mattermost]
+
+        # the Sc4ry default config entries and values
         DEFAULT_CONFIG = { 
             :max_failure_count => 5,
             :timeout_value => 20,
@@ -16,6 +23,7 @@ module Sc4ry
             :exceptions => [StandardError, RuntimeError]
             }
 
+        # Default config supported entries with format and Proc checker for {Sc4ry::Config::Validator}
         DEFAULT_CONFIG_FORMATS = { 
             :max_failure_count => {:proc => Proc::new {|item| item.class == Integer}, :desc => "must be an Integer"}, 
             :timeout_value => {:proc => Proc::new {|item| item.class == Integer}, :desc => "must be an Integer"},

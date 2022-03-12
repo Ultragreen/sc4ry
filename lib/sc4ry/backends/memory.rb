@@ -1,11 +1,17 @@
+# Sc4ry module
+# @note namespace
 module Sc4ry
+
+  # Sc4ry:Backends module
+  # @note namespace
   module Backends
 
+    # class of the memory backend
     class Memory
               
-        # Constructor
-        # @param [Hash] config Config map 
-        # @return [Sc4ry::Backends::Memory] a in Memory backend
+      # Constructor
+      # @param [Hash] config Config map 
+      # @return [Sc4ry::Backends::Memory] a in Memory backend
       def initialize(config=nil?)
         @data = Hash::new
       end

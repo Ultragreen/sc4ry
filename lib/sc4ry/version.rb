@@ -1,3 +1,9 @@
+require 'version'
+
+# Sc4ry module
+# @note namespace
 module Sc4ry
-  VERSION = "0.1.8"
+
+  # the version of Sc4ry
+  VERSION = Version.current
 end

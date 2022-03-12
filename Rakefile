@@ -5,6 +5,8 @@ require 'yard/rake/yardoc_task.rb'
 require 'code_statistics'
 require "roodi"
 require "roodi_task"
+require 'rake/version_task'
+Rake::VersionTask.new
 
 
 RoodiTask.new() do | t |

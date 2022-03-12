@@ -1,9 +1,16 @@
 
+# Sc4ry module
+# @note namespace 
 module Sc4ry
+
+  # class Facility to run and update values/status for a circuit Proc
   class RunController
 
+    # return the execution time of the proc
     attr_reader :execution_time
 
+    # constructor
+    # @param [Hash] circuit the data of the circuit 
     def initialize(circuit = {})
       @circuit = circuit
       @execution_time = 0
@@ -12,29 +19,37 @@ module Sc4ry
       @overtime = false
     end
 
+    # return if the Proc failed on a covered exception by this circuit
+    # @return [Boolean]
     def failed?
       return @failure
     end 
-    
+
+    # return if the Proc overtime the specified time of the circuit
+    # @return [Boolean]
     def overtimed? 
       return @overtime
     end
 
+    # return if the Proc timeout the timeout defined value of the circuit, if timeout is active
+    # @return [Boolean]
     def timeout? 
       return @timeout
     end
 
-    
-    def run(options = {})
+    # run and update values for the bloc given by keyword
+    # @param [Proc] block a block to run and calculate
+    # @return [Hash] a result Hash
+    def run(block: )
       start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       begin 
         if @circuit[:timeout] == true
           Timeout::timeout(@circuit[:timeout_value]) do 
-            options[:block].call
+            block.call
           end
           @timeout = false
         else
-          options[:block].call
+          block.call
         end
       rescue Exception => e
         @last_exception = e.class.to_s

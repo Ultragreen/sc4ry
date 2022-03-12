@@ -28,5 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'code_statistics', '~> 0.2.13'
   spec.add_development_dependency "yard-rspec", "~> 0.1"
   spec.add_development_dependency "roodi", "~> 5.0"
-
+  spec.add_dependency "version", "~> 1.1"
 end

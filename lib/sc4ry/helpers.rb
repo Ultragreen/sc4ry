@@ -1,10 +1,22 @@
-
+# Sc4ry module
+# @note namespace
 module Sc4ry
-  module Helpers
 
-    def Helpers.log(options)
-      Sc4ry::Logger.current = options[:target] if options[:target]
-      Sc4ry::Logger.get.send options[:level], "Sc4ry : #{options[:message]}"  
+# Sc4ry::Helpers module
+# @note namespace
+   module Helpers
+
+    # class method (module) to help logging messages
+    # @param [Symbol] target a specific logger, restored old after
+    # @param [Symbol] level (default :info) a logging level (see Logger Stdlib)
+    # @param [String] message your message
+    # @return [Boolean]
+    def Helpers.log(target: nil, level: :info, message:  )
+      save = Sc4ry::Loggers.current 
+      Sc4ry::Loggers.current = target if target
+      Sc4ry::Loggers.get.send level, "Sc4ry : #{message}"  
+      Sc4ry::Loggers.current = save
+      return true
     end
 
     # TCP/IP service checker
@@ -37,7 +49,9 @@ module Sc4ry
       end
     end
 
-
+    # class method (module) to help send notifiesby Sc4ry::Notifiers
+    # @param [Hash] options a Notifying structure
+    # @return [Boolean]
     def Helpers.notify(options = {})
       Sc4ry::Notifiers.list.each do |record|
         notifier = Sc4ry::Notifiers.get name: record

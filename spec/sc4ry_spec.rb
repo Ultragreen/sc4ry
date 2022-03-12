@@ -140,52 +140,52 @@ RSpec.describe Sc4ry do
   end
 
   context "Sc4ry::Logger" do
-    subject { Sc4ry::Logger }
+    subject { Sc4ry::Loggers }
     it { should be_an_instance_of Class }
   end
 
   context "Logging" do 
 
-    it "must be possible to check there is one default loggers with Sc4ry::Logger.current and Sc4ry::Logger.list_available" do 
-      expect(Sc4ry::Logger.current).to eq :stdout
-      expect(Sc4ry::Logger.list_available).to eq [:stdout]
+    it "must be possible to check there is one default loggers with Sc4ry::Logger.current and Sc4ry::Loggers.list_available" do 
+      expect(Sc4ry::Loggers.current).to eq :stdout
+      expect(Sc4ry::Loggers.list_available).to eq [:stdout]
     end
 
     it "must be possible to register a logger with Sc4ry::Logger.register" do 
-      expect(Sc4ry::Logger.register name: :test_logger, instance: ::Logger.new($log_file) ).to eq :test_logger
+      expect(Sc4ry::Loggers.register name: :test_logger, instance: ::Logger.new($log_file) ).to eq :test_logger
     end
 
 
     it "must be possible to get the list of configured loggers with Sc4ry::Logger.list_available" do 
-      expect(Sc4ry::Logger.list_available.sort).to eq [:stdout, :test_logger]
+      expect(Sc4ry::Loggers.list_available.sort).to eq [:stdout, :test_logger]
     end
 
     it "trying to register a logger without symbol as name must raise an exception Sc4ry::Exceptions::Sc4ryGenericError" do 
-      expect{Sc4ry::Logger.register name: "test_logger", instance: ::Logger.new($log_file) }.to raise_error(Sc4ry::Exceptions::Sc4ryGenericError)
+      expect{Sc4ry::Loggers.register name: "test_logger", instance: ::Logger.new($log_file) }.to raise_error(Sc4ry::Exceptions::Sc4ryGenericError)
     end
 
     it "trying to register a logger without name must raise an exception ArgumentError" do 
-      expect{Sc4ry::Logger.register instance: ::Logger.new($log_file) }.to raise_error(ArgumentError)
+      expect{Sc4ry::Loggers.register instance: ::Logger.new($log_file) }.to raise_error(ArgumentError)
     end
 
     it "trying to register a logger without instance must raise an exception ArgumentError" do 
-      expect{Sc4ry::Logger.register name: :test }.to raise_error(ArgumentError)
+      expect{Sc4ry::Loggers.register name: :test }.to raise_error(ArgumentError)
     end
 
     it "must be possible to get the current  loggers with Sc4ry::Logger.current" do 
-      expect(Sc4ry::Logger.current).to eq :stdout
+      expect(Sc4ry::Loggers.current).to eq :stdout
     end
 
     it "must be possible to set the current logger with Sc4ry::Logger.current= " do 
-      expect(Sc4ry::Logger.current = :test_logger).to eq :test_logger
+      expect(Sc4ry::Loggers.current = :test_logger).to eq :test_logger
     end
 
     it "must be possible to verify the current logger with Sc4ry::Logger.current" do 
-      expect(Sc4ry::Logger.current).to eq :test_logger
+      expect(Sc4ry::Loggers.current).to eq :test_logger
     end
 
     it "must be possible to get the current logger with Sc4ry::Logger.get" do
-      expect(Sc4ry::Logger.get).to be_a Logger
+      expect(Sc4ry::Loggers.get).to be_a Logger
     end
 
     it "must write to file #{$log_file} when register a circuit" do 
@@ -206,17 +206,17 @@ RSpec.describe Sc4ry do
     it "must be possible to list all available Store Backend with Sc4ry::Circuits.store.list_backend" do
       expect(Sc4ry::Circuits.store.list_backend.sort).to eq [:memory,:redis]
     end 
-    it "must be possible to display current config of redis backend with Sc4ry::Circuits.store.display_config" do
-      expect(Sc4ry::Circuits.store.display_config backend: :redis).to eq $base_config_store_redis
+    it "must be possible to display current config of redis backend with Sc4ry::Circuits.store.get_config" do
+      expect(Sc4ry::Circuits.store.get_config backend: :redis).to eq $base_config_store_redis
     end 
 
     it "must be possible to change current config of redis backend with Sc4ry::Circuits.store.config_backend" do
       $change_config = $default_config_store_redis.dup
       $change_config[:db] = 11
       Sc4ry::Circuits.store.config_backend name: :redis, config: $change_config
-      expect(Sc4ry::Circuits.store.display_config backend: :redis).to eq $change_config
+      expect(Sc4ry::Circuits.store.get_config backend: :redis).to eq $change_config
       Sc4ry::Circuits.store.config_backend name: :redis, config: $default_config_store_redis
-      expect(Sc4ry::Circuits.store.display_config backend: :redis).to eq $default_config_store_redis
+      expect(Sc4ry::Circuits.store.get_config backend: :redis).to eq $default_config_store_redis
     end
 
     it "must be possible to switch current backend with Sc4ry::Circuits.store.change_backend" do 
