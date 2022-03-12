@@ -1,8 +1,7 @@
-require_relative 'lib/sc4ry/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "sc4ry"
-  spec.version       = Sc4ry::VERSION
+  spec.version       = `cat VERSION`.chomp
   spec.authors       = ["Romain GEORGES"]
   spec.email         = ["romain.georges@orange.com"]
 
