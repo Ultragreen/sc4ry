@@ -13,11 +13,11 @@ module Sc4ry
     include Singleton
 
     @@backends = {:memory => {:class => Sc4ry::Backends::Memory, config: {}},
-                  :redis  => {:class => Sc4ry::Backends::Redis, :config => {:host => 'localhost', :port => 6379, :db => 10 }}}
+                  :redis  => {:class => Sc4ry::Backends::Redis, :config => {:host => 'localhost', :port => 6379, :db => 1 }}}
 
     # accessor on current backend (default :memory)
     attr_reader :be
-    
+
     def_delegators :@be, :put, :get, :flush, :exist?, :del, :list
 
     # constructor pointing on :memory backend

@@ -10,6 +10,7 @@ module Sc4ry
 
             # accessor on Circuit definition given for validation
             attr_reader :input
+            
             # accessor on circuit initial definition from default config or given in construction by from keyword
             # @note altered by reference to final result mapping with {#validate!}
             attr_reader :config

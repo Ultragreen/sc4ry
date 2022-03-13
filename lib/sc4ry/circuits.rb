@@ -1,7 +1,7 @@
 # Sc4ry Module
 # @note namespace
 module Sc4ry
-  
+
   # Circuits and default configuration management class
   class Circuits
 
@@ -147,6 +147,7 @@ module Sc4ry
     def Circuits.unregister(circuit:)
       if Circuits.list.include? circuit then
         @@circuits_store.del key: circuit
+        Sc4ry::Helpers.log level: :debug, message: "Circuit #{circuit} : unregistered"
         return true
       else
         raise Sc4ryGenericError, "Circuit #{circuit} not found"

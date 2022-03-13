@@ -5,7 +5,7 @@ RSpec.describe Sc4ry do
   before :all do 
     $log_file = '/tmp/logfile.log'
     File::unlink($log_file) if File::exist?($log_file)
-    $base_config_store_redis = {:host => 'localhost', :port => 6379, :db => 10}
+    $base_config_store_redis = {:host => 'localhost', :port => 6379, :db => 1}
     $default_config_store_redis = $base_config_store_redis.dup
     $default_config_store_redis[:host] = (ENV["REDIS_HOST"])? ENV["REDIS_HOST"] : "localhost"
     $default_config_store_redis[:port] = (ENV["REDIS_PORT"])? ENV["REDIS_PORT"] : 6379
