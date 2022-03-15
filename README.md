@@ -48,23 +48,81 @@ Or install it yourself as:
 A quick circuit test :
 create a test script lile test.rb :
 
+```ruby
+
+  require 'rubygems'
+  require 'sc4ry'
+
+  include Sc4ry
+
+  Circuits.register circuit: :mycircuit, config: {:notifiers => [:prometheus,:mattermost], 
+                                                  :exceptions => [Errno::ECONNREFUSED, URI::InvalidURIError]}
+
+  Circuits.run  do # circuit: :mycircuit is optional, run work with the first circuit registered
+    puts RestClient.get('http://your_service/endpoint')
+  end
+
+  
+
+```
+
 ### the Sc4ry Config default values :
 
-default values, circuit is half open before one of the max count is reached
+Default values, circuit is half open before one of the max count is reached :
 
-* :max_failure_count
-* * description : maximum failure before opening circuit
-* * default value : 5
-*  :timeout_value=>20,                         => timeout value, if :timeout => true
-*  :timeout=>false,                            => (de)activate internal timeout
-*  :max_timeout_count=>5,                      => maximum timeout try before opening circuit
-*  :max_time=>10,                              => maximum time for a circuit run
-*  :max_overtime_count=>3,                     => maximum count of overtime before opening circuit
-*  :check_delay=>30,                           => delay after opening, before trying again to closed circuit or after an other check
-*  :notifiers=>[],                             => active notifier, must be :symbol in [:prometheus, :mattermost]
-*  :forward_unknown_exceptions => true,        => (de)activate forwarding of unknown exceptions, just log in DEBUG if false
-*  :raise_on_opening => false,                 => (de)activate raise specific Sc4ry exceptions ( CircuitBreaked ) if circuit opening
-#  :exceptions=>[StandardError, RuntimeError]} => list of selected Exceptions considered for failure, others are SKIPPED.
+* _:max_failure_count_
+<br>*description* : maximum failure before opening circuit
+<br>*default value* : 5
+<br>
+
+*  _:timeout_value_
+<br>*description* : timeout value, if :timeout => true
+<br>*default value* : 20
+<br>
+
+*  _:timeout_
+<br>*description* : (de)activate internal timeout
+<br>*default value* : false
+<br>
+
+*  _:max_timeout_count_
+<br>*description* : maximum timeout try before opening circuit
+<br>*default value** : 5
+<br>
+
+*  _:max_time_
+<br>*description* : maximum time for a circuit run
+<br>*default value* : 10
+<br>
+
+*  _:max_overtime_count_
+<br>*description* : maximum count of overtime before opening circuit
+<br>*default value* : 3
+<br>
+
+*  _:check_delay_
+<br>*description* : delay after opening, before trying again to closed circuit or after an other check
+<br>*default value* : 30
+<br>
+
+*  _:notifiers_
+<br>*description* : active notifier, must be :symbol in [:prometheus, :mattermost]
+<br>*default value* : []
+<br>
+
+*  _:forward_unknown_exceptions_
+<br>*description* : (de)activate forwarding of unknown exceptions, just log in DEBUG if false
+<br>*default value* : true
+<br>
+
+*  _:raise_on_opening_
+<br>*description* : (de)activate raise specific Sc4ry exceptions ( CircuitBreaked ) if circuit opening
+<br>*default value* : false
+<br>
+
+*  _:exceptions_
+<br>*description* : [StandardError, RuntimeError]
+<br>*default value* : list of selected Exceptions considered for failure, others are SKIPPED.  
 
 ### Global overview for all features
 
