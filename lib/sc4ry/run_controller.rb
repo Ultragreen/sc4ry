@@ -1,16 +1,13 @@
-
 # Sc4ry module
-# @note namespace 
+# @note namespace
 module Sc4ry
-
   # class Facility to run and update values/status for a circuit Proc
   class RunController
-
     # return the execution time of the proc
     attr_reader :execution_time
 
     # constructor
-    # @param [Hash] circuit the data of the circuit 
+    # @param [Hash] circuit the data of the circuit
     def initialize(circuit = {})
       @circuit = circuit
       @execution_time = 0
@@ -22,59 +19,53 @@ module Sc4ry
     # return if the Proc failed on a covered exception by this circuit
     # @return [Boolean]
     def failed?
-      return @failure
-    end 
+      @failure
+    end
 
     # return if the Proc overtime the specified time of the circuit
     # @return [Boolean]
-    def overtimed? 
-      return @overtime
+    def overtimed?
+      @overtime
     end
 
     # return if the Proc timeout the timeout defined value of the circuit, if timeout is active
     # @return [Boolean]
-    def timeout? 
-      return @timeout
+    def timeout?
+      @timeout
     end
 
     # run and update values for the bloc given by keyword
     # @param [Proc] block a block to run and calculate
     # @return [Hash] a result Hash
-    def run(block: )
+    def run(block:)
       start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      begin 
+      begin
         if @circuit[:timeout] == true
-          Timeout::timeout(@circuit[:timeout_value]) do 
+          Timeout.timeout(@circuit[:timeout_value]) do
             block.call
           end
           @timeout = false
         else
           block.call
         end
-      rescue Exception => e
+      rescue StandardError => e
         @last_exception = e.class.to_s
-        if e.class  == Timeout::Error then 
+        if e.instance_of?(Timeout::Error)
           @timeout = true
         elsif @circuit[:exceptions].include? e.class
           @failure = true
-        else  
-          if @circuit[:forward_unknown_exceptions] then
+        elsif @circuit[:forward_unknown_exceptions]
+          raise e.class, "Sc4ry forward: #{e.message}"
+        else
+          Sc4ry::Helpers.log level: :debug, message: "skipped : #{@last_exception}"
 
-            raise e.class, "Sc4ry forward: #{e.message}" 
-          else
-            Sc4ry::Helpers.log level: :debug, message: "skipped : #{@last_exception}"
-          end
-          
-        end 
+        end
       end
       @end_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       @execution_time = @end_time - start_time
-      @overtime = @execution_time > @circuit[:max_time] 
-      return {failure: @failure, overtime: @overtime, timeout: @timeout, execution_time: @execution_time, end_time: @end_time, last_exception: @last_exception}
-
+      @overtime = @execution_time > @circuit[:max_time]
+      { failure: @failure, overtime: @overtime, timeout: @timeout, execution_time: @execution_time,
+        end_time: @end_time, last_exception: @last_exception }
     end
-
-
-
   end
 end

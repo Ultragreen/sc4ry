@@ -6,7 +6,7 @@ require 'redis'
 require 'version'
 
 # Stdlibs depends
-require 'logger' 
+require 'logger'
 require 'timeout'
 require 'forwardable'
 require 'singleton'
@@ -16,7 +16,6 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'yaml'
-
 
 # Sc4ry internal depends
 require_relative 'helpers'
@@ -31,4 +30,3 @@ require_relative 'backends/init'
 require_relative 'store'
 require_relative 'run_controller'
 require_relative 'circuits'
-
