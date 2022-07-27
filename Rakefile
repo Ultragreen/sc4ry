@@ -3,19 +3,12 @@ require "rspec/core/rake_task"
 require 'yard'
 require 'yard/rake/yardoc_task.rb'
 require 'code_statistics'
-require "roodi"
-require "roodi_task"
 require "version"
 require 'rake/version_task'
+require 'rubocop//rake_task'
+
 Rake::VersionTask.new
-
-
-RoodiTask.new() do | t |
-  t.patterns = %w(lib/**/*.rb)
-  t.config = "ultragreen_roodi_coding_convention.yml"
-end
-
-
+RuboCop::RakeTask.new
 RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
@@ -28,10 +21,11 @@ end
 YARD::Config.load_plugin('yard-rspec')
   
 namespace :yardoc do
-task :clobber do
+  task :clobber do
     rm_r "yardoc" rescue nil
     rm_r ".yardoc" rescue nil
     rm_r "pkg" rescue nil
+  end
 end
-end
+
 task :clobber => "yardoc:clobber"
