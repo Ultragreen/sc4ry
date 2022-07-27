@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Sc4ry module
 # @note namespace
 module Sc4ry

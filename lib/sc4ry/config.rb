@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Sc4ry module
 # @note namespace
 module Sc4ry
@@ -65,7 +67,7 @@ module Sc4ry
       # adapter for exception key in config String to Constant Class Name if need
       # @note by reference
       def format_exceptions
-        @config[:exceptions].map! { |item| item = item.instance_of?(String) ? Object.const_get(item) : item }
+        @config[:exceptions].map! { |item| item.instance_of?(String) ? Object.const_get(item) : item }
       end
     end
 

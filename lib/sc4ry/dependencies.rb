@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubygems depends
 require 'rest-client'
 require 'prometheus/client'

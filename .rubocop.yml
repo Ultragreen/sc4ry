@@ -28,8 +28,6 @@ Style/MutableConstant:
 
 Metrics/ClassLength:
   Enabled: false
-Style/FrozenStringLiteralComment:
-  Enabled: true
 Metrics/AbcSize:
   Enabled: false
 Metrics/CyclomaticComplexity:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sc4ry
   module Backends
     # Redis backend definition
@@ -23,7 +25,7 @@ module Sc4ry
       # @return [String] content value of record
       def get(key:)
         res = YAML.load(@be.get(key))
-        res[:exceptions].map! { |item| item = Object.const_get(item) if item.instance_of?(String) }
+        res[:exceptions].map! { |item| Object.const_get(item) if item.instance_of?(String) }
         res
       end
 
@@ -33,7 +35,7 @@ module Sc4ry
       # @return [String] content value of record
       def put(key:, value:)
         data = value.dup
-        data[:exceptions].map! { |item| item = item.name.to_s if item.instance_of?(Class) }
+        data[:exceptions].map! { |item| item.name.to_s if item.instance_of?(Class) }
         @be.set key, data.to_yaml
       end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Gem::Specification.new do |spec|
   spec.name          = 'sc4ry'
   spec.version       = `cat VERSION`.chomp
